@@ -1,8 +1,12 @@
-<p align="center">
-  <img src="docs/images/logo.svg" alt="Freezy Aim logo" width="96">
-</p>
-
-<h1 align="center">Freezy Aim</h1>
+[README.md](https://github.com/user-attachments/files/34405375/README.md)
+<h1 align="center">
+  <a href="https://github.com/Aceisweird/FreezyAim">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="docs/images/logo-for-dark.png">
+      <img src="docs/images/logo-for-light.png" alt="Freezy Aim" width="340">
+    </picture>
+  </a>
+</h1>
 
 <p align="center">A free, open-source crosshair overlay for games on Windows, macOS and Linux.</p>
 
