@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    defaults:
+      run:
+        working-directory: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: src/go.mod
+          cache: false
+      - run: go vet ./...
+      - run: go test ./...
+
+  build:
+    name: Build for every system
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: src/go.mod
+          cache: false
+      - name: Build
+        working-directory: src
+        env:
+          CGO_ENABLED: "0"
+        run: |
+          for target in windows/amd64 linux/amd64 linux/arm64 darwin/arm64 darwin/amd64; do
+            GOOS=${target%/*} GOARCH=${target#*/} go build -trimpath -tags nethttpomithttp2 -ldflags "-s -w" -o /dev/null .
+          done
+
+  overlay:
+    name: Check the macOS and Linux overlay
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: sudo apt-get update && sudo apt-get install -y libegl1 libxkbcommon0 libdbus-1-3 libfontconfig1 libglib2.0-0
+      - run: pip install -r requirements.txt
+      - name: Start the overlay without a screen
+        env:
+          QT_QPA_PLATFORM: offscreen
+        run: |
+          mkdir -p /tmp/freezy-aim
+          echo '{"visible":true,"opacity":1,"offset_x":0,"offset_y":0,"screen":0}' > /tmp/freezy-aim/overlay.json
+          timeout 5 python src/overlay.py /tmp/freezy-aim http://127.0.0.1:1/ || test $? -eq 124
+          grep monitors /tmp/freezy-aim/overlay_status.json

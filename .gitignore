@@ -1,0 +1,29 @@
+# Build output, apart from the Windows app kept in dist/
+*.exe
+!dist/FreezyAim.exe
+*.exe~
+*.test
+*.out
+out/
+src/freezyaim
+src/freezy-aim
+
+# Files the app creates when run from source
+crosshair_config.json
+crosshair_library.json
+crosshair_library.json.broken
+freezy-aim.log
+overlay.json
+overlay.png
+overlay_status.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

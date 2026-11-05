@@ -1,4 +1,3 @@
-[README.md](https://github.com/user-attachments/files/34405375/README.md)
 <h1 align="center">
   <a href="https://github.com/Aceisweird/FreezyAim">
     <picture>

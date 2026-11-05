@@ -1,0 +1,46 @@
+name: Release
+
+# Pushing a tag such as v1.0 builds the app for every system and publishes a release.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: src/go.mod
+          cache: false
+      - name: Test
+        working-directory: src
+        run: go test ./...
+      - name: Build
+        working-directory: src
+        env:
+          CGO_ENABLED: "0"
+        run: |
+          build() {
+            GOOS=$1 GOARCH=$2 go build -trimpath -tags nethttpomithttp2 \
+              -ldflags "-s -w $4 -X main.version=${GITHUB_REF_NAME#v}" -o "../out/$3" .
+          }
+          build windows amd64 FreezyAim.exe -H=windowsgui
+          build linux amd64 freezy-aim-linux-x64
+          build linux arm64 freezy-aim-linux-arm64
+          build darwin arm64 freezy-aim-macos-apple-silicon
+          build darwin amd64 freezy-aim-macos-intel
+      - name: Create checksums
+        working-directory: out
+        run: sha256sum * > SHA256SUMS
+      - id: title
+        run: echo "name=Freezy Aim ${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ steps.title.outputs.name }}
+          generate_release_notes: true
+          files: out/*

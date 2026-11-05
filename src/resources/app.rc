@@ -1,0 +1,30 @@
+// The Windows icon and the details shown under Properties > Details for the .exe.
+// Keep the version in step with src/library.go, then run build.sh.
+
+1 ICON "freezy-aim.ico"
+
+1 VERSIONINFO
+FILEVERSION 1,0,0,0
+PRODUCTVERSION 1,0,0,0
+FILEOS 0x40004
+FILETYPE 0x1
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904B0"
+    BEGIN
+      VALUE "CompanyName", "Freezy Aim contributors"
+      VALUE "FileDescription", "Freezy Aim"
+      VALUE "FileVersion", "1.0"
+      VALUE "InternalName", "FreezyAim"
+      VALUE "LegalCopyright", "Copyright (c) 2026 Freezy Aim contributors"
+      VALUE "OriginalFilename", "FreezyAim.exe"
+      VALUE "ProductName", "Freezy Aim"
+      VALUE "ProductVersion", "1.0"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0409, 0x04B0
+  END
+END
